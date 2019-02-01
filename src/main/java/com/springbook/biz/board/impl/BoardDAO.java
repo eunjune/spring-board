@@ -125,5 +125,4 @@ public class BoardDAO{
 		
 		return boardList;
 	}
-	
 }
