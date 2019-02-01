@@ -7,13 +7,11 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.stereotype.Repository;
-
 import com.springbook.biz.board.BoardVO;
 import com.springbook.biz.common.JDBCUtil;
 
-@Repository("boardDAO")
-public class BoardDAO {
+//@Repository("boardDAO")
+public class BoardDAO{
 	private Connection conn = null;
 	private PreparedStatement stmt = null;
 	private ResultSet rs = null;
@@ -21,7 +19,7 @@ public class BoardDAO {
 	private final String BOARD_INSERT = "insert into board(seq, title, writer, content) "
 			+ "values((select ifnull(max(b.seq),0)+1 from board b),?,?,?)";
 	private final String BOARD_UPDATE = "update board set title=?,content=? where seq=?";
-	private final String BOARD_DELETE = "delete board where seq=?";
+	private final String BOARD_DELETE = "delete from board where seq=?";
 	private final String BOARD_GET = "select * from board where seq=?";
 	private final String BOARD_LIST = "select * from board order by seq desc";
 	
@@ -101,7 +99,7 @@ public class BoardDAO {
 	}
 	
 
-	public List<BoardVO> getBoardList(BoardVO vo) {
+	public List<BoardVO> getBoardList() {
 		System.out.println("==> JDBC로 getBoard() 기능처리");
 		List<BoardVO> boardList = new ArrayList<BoardVO>();
 		try {
@@ -127,4 +125,5 @@ public class BoardDAO {
 		
 		return boardList;
 	}
+	
 }

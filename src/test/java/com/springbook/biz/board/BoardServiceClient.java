@@ -1,30 +1,21 @@
 package com.springbook.biz.board;
-import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.context.support.GenericXmlApplicationContext;
+import java.util.List;
 
-import com.springbook.biz.user.UserService;
-import com.springbook.biz.user.UserVO;
+import com.springbook.biz.board.impl.BoardDAO;
 
 public class BoardServiceClient {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		AbstractApplicationContext container = new GenericXmlApplicationContext("applicationContext.xml");
+		//AbstractApplicationContext container = new GenericXmlApplicationContext("applicationContext.xml");
 		
-		UserService userService = (UserService)container.getBean("userService");
+		BoardDAO boardDAO = new BoardDAO();
+		List<BoardVO> boardList = boardDAO.getBoardList();
 		
-		UserVO vo = new UserVO();
-		vo.setId("test");
-		vo.setPassword("test123");
-		
-		UserVO user = userService.getUser(vo);
-		if(user!=null) {
-			System.out.println(user.getName() + "님 환영합니다.");
-		} else {
-			System.out.println("로그인 실패");
-		}
-		
-		container.close();
+
+		for(BoardVO item : boardList)
+			System.out.println(item.toString());
+		//container.close();
 	}
 
 }
