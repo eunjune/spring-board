@@ -3,6 +3,7 @@ package com.springbook.view.board;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +24,15 @@ public class BoardController {
 	
 	@Autowired
 	private BoardService boardService;
+	
+	@RequestMapping("/dataTransform.do")
+	@ResponseBody
+	public List<BoardVO> dataTransform(BoardVO vo) {
+		vo.setSearchCondition("TITLE");
+		vo.setSearchKeyword("");
+		List<BoardVO> boardList = boardService.getBoardList(vo);
+		return boardList;
+	}
 	
 	@RequestMapping(value="/insertBoard.do")
 	public String insertBoard(BoardVO vo) throws IOException {
@@ -66,15 +76,11 @@ public class BoardController {
 	}
 	
 	@RequestMapping("/getBoardList.do")
-	public String getBoardList(@RequestParam(value="searchCondition", defaultValue="TITLE"
-								, required=false) String condition,
-								@RequestParam(value="searchCondition", defaultValue=""
-								, required=false) String keyword
-								, Model model) {
-		System.out.println("검색 조건 : " + condition);
-		System.out.println("검색 단어 : " + keyword);
+	public String getBoardList(BoardVO vo,Model model) {
+		if(vo.getSearchCondition() == null) vo.setSearchCondition("TITLE");
+		if(vo.getSearchKeyword() == null) vo.setSearchKeyword("");
 		
-		model.addAttribute("boardList",boardService.getBoardList());
+		model.addAttribute("boardList",boardService.getBoardList(vo));
 		
 		return "getBoardList.jsp";
 	}
