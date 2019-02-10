@@ -2,8 +2,9 @@ package com.springbook.biz.board.impl;
 
 import java.util.List;
 
-import org.mybatis.spring.SqlSessionTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.stereotype.Repository;
 
 import com.springbook.biz.board.BoardVO;
@@ -11,35 +12,35 @@ import com.springbook.biz.board.BoardVO;
 @Repository
 public class BoardDAO{
 	
-	@Autowired
-	private SqlSessionTemplate mybatis;
+	@PersistenceContext
+	private EntityManager em;
 	
 	public void insertBoard(BoardVO vo) {
 		System.out.println("===> Spring JDBC로 insertBoard() 기능 처리");
-		mybatis.insert("BoardDAO.insertBoard",vo);
+		em.persist(vo);
 	}
 	
 
 	public void updateBoard(BoardVO vo) {
 		System.out.println("===> Spring JDBC로 updateBoard() 기능 처리");
-		mybatis.update("BoardDAO.updateBoard",vo);
+		em.merge(vo);
 	}
 	
 
 	public void deleteBoard(BoardVO vo) {
 		System.out.println("===> Spring JDBC로 deleteBoard() 기능 처리");
-		mybatis.delete("BoardDAO.deleteBoard",vo);
+		em.remove(em.find(BoardVO.class, vo.getSeq()));
 	}
 	
 
 	public BoardVO getBoard(BoardVO vo) {
 		System.out.println("===> Spring JDBC로 getBoard() 기능 처리");
-		return (BoardVO)mybatis.selectOne("BoardDAO.getBoard",vo);
+		return (BoardVO)em.find(BoardVO.class, vo.getSeq());
 	}
 	
 
 	public List<BoardVO> getBoardList(BoardVO vo) {
 		System.out.println("===> Spring JDBC로 getBoardList() 기능 처리");
-		return mybatis.selectList("BoardDAO.getBoardList",vo);		
+		return em.createQuery("from BoardVO b order by b.seq desc").getResultList();		
 	}
 }
